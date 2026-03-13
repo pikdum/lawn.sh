@@ -104,6 +104,7 @@ discover_manifests() {
 build_entries() {
   local manifest dir name display
   declare -A counts=()
+  local -a unsorted=()
 
   ENTRIES=()
   for manifest in "${MANIFESTS[@]}"; do
@@ -121,8 +122,10 @@ build_entries() {
       display="$name  [$dir]"
     fi
 
-    ENTRIES+=("$display"$'\t'"$manifest")
+    unsorted+=("$display"$'\t'"$manifest")
   done
+
+  mapfile -t ENTRIES < <(printf '%s\n' "${unsorted[@]}" | sort)
 }
 
 load_entries() {
