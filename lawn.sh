@@ -161,13 +161,17 @@ choose_and_run() {
   selection="$(
     printf '%s\n' "${ENTRIES[@]}" | \
       fzf \
+        --style=full \
         --delimiter=$'\t' \
         --with-nth=1 \
-        --prompt='lawn> ' \
-        --height=80% \
+        --padding='1,2' \
+        --prompt='lawn.sh> ' \
         --layout=reverse \
+        --input-label=' Search ' \
+        --list-label=' Targets ' \
+        --bind='focus:transform-preview-label:printf " %s " {1}' \
         --preview='sed -n "1,200p" {2}' \
-        --preview-window='right:60%:wrap'
+        --preview-window='down,45%,wrap,border'
   )" || exit 130
 
   manifest="${selection#*$'\t'}"
