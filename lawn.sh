@@ -159,7 +159,9 @@ run_manifest() {
 }
 
 choose_and_run() {
-  local selection manifest
+  local selection manifest editor
+
+  editor="${VISUAL:-${EDITOR:-xdg-open}}"
 
   selection="$(
     printf '%s\n' "${ENTRIES[@]}" | \
@@ -172,7 +174,10 @@ choose_and_run() {
         --layout=reverse \
         --input-label=' Search ' \
         --list-label=' Targets ' \
+        --header='enter: run • e: edit .lawnrc • ctrl-r: refresh preview' \
         --bind='focus:transform-preview-label:printf " %s " {1}' \
+        --bind='ctrl-r:refresh-preview' \
+        --bind="e:execute($editor {2})+refresh-preview" \
         --preview='sed -n "1,200p" {2}' \
         --preview-window='down,45%,wrap,border'
   )" || exit 130
